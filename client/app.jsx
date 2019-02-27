@@ -12,7 +12,7 @@ library.add(faReply);
 library.add(faUserFriends);
 library.add(faCommentAlt);
 
-export default class App extends React.Component {
+export default class CommentSection extends React.Component {
   constructor(props) {
     super(props);
 
@@ -37,7 +37,7 @@ export default class App extends React.Component {
   }
 
   getComments = () => {
-    axios.get('/comments')
+    axios.get(`http://ec2-54-193-26-23.us-west-1.compute.amazonaws.com${window.location.pathname}comments`)
     .then((res) => {
       const sortedComments = _.sortBy(res.data, (i) => {
         return new moment(i.postedAt)
@@ -52,7 +52,7 @@ export default class App extends React.Component {
   }
 
   getCommentCount = () => {
-    axios.get('/commentCount')
+    axios.get(`http://ec2-54-193-26-23.us-west-1.compute.amazonaws.com${window.location.pathname}commentCount`)
     .then((response) => {
       this.setState({
         count: response.data.count
@@ -96,7 +96,7 @@ export default class App extends React.Component {
 
   render() {
     return (
-      <div style={{paddingLeft: '50px'}} className={'container'} onScroll={this.handleScroll}>
+      <div style={{paddingLeft: '50px'}} className={'containerKevin'} onScroll={this.handleScroll}>
       {this.state.count &&
         <CommentCount className='commentCount' count={this.state.count} />
       }

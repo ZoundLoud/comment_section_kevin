@@ -26,15 +26,17 @@ const moment = require('moment');
 // populateFolder();
 
 const connection = mysql.createConnection({
-  host: 'localhost',
+  host: '172.17.0.2',
   user: 'root',
-  password: '',
+  password: 'password',
 });
+
 
 const createTable = async () => {
   await connection.query('DROP TABLE IF EXISTS comments');
   await connection.query(`CREATE TABLE comments(
     id INT AUTO_INCREMENT PRIMARY KEY,
+    songId INT,
     profilePic VARCHAR(200),
     username VARCHAR(200),
     message VARCHAR(200),
@@ -58,11 +60,12 @@ const randomSongTime = () => {
 };
 
 const randomFollowers = () => Math.floor(Math.random() * 10000 + 1);
-
+const randomNum = () => Math.floor(Math.random() * 99 + 1);
 const createMessage = async (count) => {
   await connection.query(`
-    INSERT INTO comments(profilePic, username, message, postedAt, songTime, followers) 
-    VALUES('https://s3.us-east-2.amazonaws.com/kevinbece5/userpics/user${count}.jpg',
+    INSERT INTO comments(profilePic, songId, username, message, postedAt, songTime, followers)
+    VALUES('https://s3-us-west-1.amazonaws.com/kevin-zoundcloud/imgs/user${randomNum()}.jpg',
+      '${count}',
       '${loremIpsum({ count: 1, units: 'words' })}',
       '${loremIpsum()}',
       '${getRandomTime()}',
@@ -73,7 +76,7 @@ const createMessage = async (count) => {
 };
 
 const createMessages = () => {
-  let count = 1;
+  let count = 0;
   const message = () => {
     if (count === 100) {
       return count;
@@ -91,8 +94,10 @@ const Seed = async () => {
   await connection.query('CREATE DATABASE ZoundCloud');
   await connection.query('USE ZoundCloud');
   await createTable();
-  await createMessages();
+  for (let i = 0; i < 50; i++) {
+    createMessages();
+  }
   await connection.end();
 };
 
-Seed();
+module.exports = Seed;

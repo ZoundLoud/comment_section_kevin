@@ -1,7 +1,8 @@
-const webpack = require('webpack');
+
+const CompressionPlugin = require('compression-webpack-plugin');
 
 module.exports = {
-  entry: './client/index.jsx',
+  entry: './client/index.js',
   // output of the bundle
   output: {
     path: `${__dirname}/dist`,
@@ -31,13 +32,10 @@ module.exports = {
   resolve: {
     extensions: ['*', '.js', '.jsx'],
   },
-  // hot reloafer
   plugins: [
-    new webpack.HotModuleReplacementPlugin(),
+    new CompressionPlugin(),
   ],
-  // When running npm start the output of dev server will be to this folder
   devServer: {
     contentBase: './dist',
-    hot: true,
   },
 };
